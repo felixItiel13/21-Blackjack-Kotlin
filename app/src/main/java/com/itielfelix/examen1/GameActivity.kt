@@ -139,8 +139,8 @@ class GameActivity : ComponentActivity() {
                             }
                             if (croupierCards.size > 3){
                                 Box(cardModifier) {
-                                    androidx.compose.foundation.Image(
-                                        androidx.compose.ui.res.painterResource(
+                                    Image(
+                                        painterResource(
                                             id = thisContext.resources.getIdentifier(
                                                 croupierCards[3],
                                                 "drawable",
@@ -148,8 +148,8 @@ class GameActivity : ComponentActivity() {
                                             )
                                         ),
                                         contentDescription = "back_cover",
-                                        contentScale = androidx.compose.ui.layout.ContentScale.FillHeight,
-                                        modifier = androidx.compose.ui.Modifier.height(200.dp)
+                                        contentScale = ContentScale.FillHeight,
+                                        modifier = Modifier.height(200.dp)
                                     )
                                 }
 
