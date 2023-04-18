@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.pager.HorizontalPager
 import com.itielfelix.examen1.ui.theme.Examen1Theme
 var instructionsHand = mutableListOf<String>()
 class InstructionsActivity : ComponentActivity() {
@@ -69,8 +70,9 @@ fun UIBuilding() {
         )
         .border(1.dp, Color.LightGray, shape = RoundedCornerShape(8))
     val instructionCards by remember{ mutableStateOf(instructionsHand.toMutableStateList()) }
+    var stand by remember{ mutableStateOf(false) }
     val thisContext = LocalContext.current
-    Box(){Column(
+    Box {Column(
         Modifier
             .fillMaxWidth()
             .verticalScroll(ScrollState(0)), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -90,19 +92,32 @@ fun UIBuilding() {
             ) {
                 Text("Draw Card")
             }
-
         }
         LazyRow(horizontalArrangement = Arrangement.spacedBy((-34).dp)) {
             items(instructionCards) { card ->
                 GenerateCard(thisContext = LocalContext.current, card = card,cardModifier)
             }
         }
+        Text("If you are ok with those cards, you can click \"Stand\". This make the game end and the player is determined")
+        Button(onClick = {
+            stand = true
+        }, enabled= !stand, shape = RoundedCornerShape(50)
+        ) {
+            Text("Stand")
+        }
+        Text("Croupier Points")
+        Text("")
+        Text("Player points")
+        Text(calculatePoints(listCards = instructionCards).toString())
+        HorizontalPager(count = 3, state = ) {
+
+        }
     }
         FloatingActionButton(
             modifier = Modifier
                 .padding(all = 20.dp)
                 .size(80.dp)
-                .align(alignment =Alignment.BottomEnd),
+                .align(alignment = Alignment.BottomEnd),
             onClick = {
                 thisContext.startActivity(Intent(thisContext,MainActivity::class.java))
                 instructionsHand.clear()

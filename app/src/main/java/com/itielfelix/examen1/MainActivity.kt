@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
+@Preview
 @Composable
 fun UIMenu() {
     val thisContext = LocalContext.current
@@ -45,26 +45,26 @@ fun UIMenu() {
         .heightIn(50.dp)
         .clip(RoundedCornerShape(40.dp))
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally){
-        Column(Modifier.fillMaxWidth()) {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.padding(15.dp))
             Button(onClick = {
                 val intent = Intent(thisContext, GameActivity::class.java);
                 thisContext.startActivity(intent)
 
-            },roundedCorners) {
+            }, shape = RoundedCornerShape(50)) {
                 Text("Play!")
                 Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "PLay")
             }
             Spacer(modifier = Modifier.padding(15.dp))
             Button(onClick = {
                 val intent = Intent(thisContext, InstructionsActivity::class.java);
-                thisContext.startActivity(intent)},roundedCorners)
+                thisContext.startActivity(intent)},shape = RoundedCornerShape(50))
             {
                 Text("Instructions")
                 Icon(imageVector = Icons.Default.FileCopy, contentDescription = "PLay")
             }
             Spacer(modifier = Modifier.padding(15.dp))
-            Button(onClick = {},roundedCorners) {
+            Button(onClick = {}, shape = RoundedCornerShape(50)) {
                  Text("View Score")
                 Icon(imageVector = Icons.Default.Search, contentDescription = "Score" )
             }
