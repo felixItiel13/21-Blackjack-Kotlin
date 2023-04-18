@@ -56,8 +56,11 @@ fun UIMenu() {
                 Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "PLay")
             }
             Spacer(modifier = Modifier.padding(15.dp))
-            Button(onClick = {},roundedCorners) {
-                Text("Instuctions")
+            Button(onClick = {
+                val intent = Intent(thisContext, InstructionsActivity::class.java);
+                thisContext.startActivity(intent)},roundedCorners)
+            {
+                Text("Instructions")
                 Icon(imageVector = Icons.Default.FileCopy, contentDescription = "PLay")
             }
             Spacer(modifier = Modifier.padding(15.dp))
@@ -65,6 +68,7 @@ fun UIMenu() {
                  Text("View Score")
                 Icon(imageVector = Icons.Default.Search, contentDescription = "Score" )
             }
+
         }
     }
 }

@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Examen1</string>
     <string name="title_activity_game">GameActivity</string>
+    <string name="title_activity_instructions_building">InstructionsBuilding</string>
+    <string name="title_activity_instructions_activity">InstructionsActivity</string>
 </resources>
