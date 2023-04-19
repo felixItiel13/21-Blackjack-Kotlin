@@ -27,6 +27,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.itielfelix.examen1.ui.theme.Examen1Theme
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+
 var allCards  = mutableListOf("h2","h3","h4","h5","h6","h7","h8","h9","h10","hj","hq","hk"
     ,"sa","s2","s3","s4","s5","s6","s7","s8","s9","s10","sj","sq","sk"
     ,"ca","c2","c3","c4","c5","c6","c7","c8","c9","c10","cj","cq","ck"
@@ -35,20 +39,19 @@ var variableCards = allCards.toMutableList()
 var playerHand = mutableListOf<String>()
 var croupier = mutableListOf<String>()
 class GameActivity : ComponentActivity() {
+lateinit var history:DatabaseHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Examen1Theme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
+                Surface(modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background) {
                     variableCards.shuffle()
                     playerHand.add(variableCards.removeLast())
                     playerHand.add(variableCards.removeLast())
                     croupier.add(variableCards.removeLast())
                     croupier.add(variableCards.removeLast())
+                    history = DatabaseHelper(this)
                     GameUI()
                 }
             }
@@ -59,6 +62,7 @@ class GameActivity : ComponentActivity() {
     @SuppressLint("DiscouragedApi")
     @Composable
     fun GameUI() {
+        val buttonColors = ButtonDefaults.buttonColors(backgroundColor = appColor)
         var winner by rememberSaveable{
             mutableStateOf(false)
         }
@@ -141,21 +145,26 @@ class GameActivity : ComponentActivity() {
                         }
                         }
                         if(!winner) {
+                            val winnerName = chooseWinner(calculatePoints(listCards = croupierCards),points)
                             Toast.makeText(
-                                thisContext,
-                                "Croupier " + calculatePoints(listCards = croupierCards).toString(),
+                                thisContext,if(winnerName=="Draw") "It was a draw!" else "$winnerName has Won!",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            Toast.makeText(
-                                thisContext,
-                                "Player $points",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            Toast.makeText(
-                                thisContext,
-                                chooseWinner(calculatePoints(listCards = croupierCards), points),
-                                Toast.LENGTH_SHORT
-                            ).show()
+
+                            val time = Calendar.getInstance().time
+                            val formatter = SimpleDateFormat("MM-dd HH:mm")
+                            val current = formatter.format(time)
+                            var savedPlayerCards = ""
+                            var savedCroupierCards = ""
+                            for(item in playerCards){
+                                savedPlayerCards+= "$item,"
+                            }
+                            for(item in croupierCards){
+                                savedCroupierCards+= "$item,"
+                            }
+                            Toast.makeText(thisContext, current,Toast.LENGTH_SHORT).show()
+                            history.addRow(savedPlayerCards, savedCroupierCards,
+                                chooseWinner(calculatePoints(listCards = croupierCards),points), current.toString())
                         }
                         winner = true
                     }
@@ -169,7 +178,7 @@ class GameActivity : ComponentActivity() {
                 Button(onClick = {
                     playerCards.add(variableCards.removeLast())
                     numCards = playerCards.size
-                },
+                }, colors = buttonColors,
                     enabled = reached21Points, shape = RoundedCornerShape(50)
                 ) {
                     Text("Draw Card")
@@ -178,7 +187,7 @@ class GameActivity : ComponentActivity() {
                 Button(onClick = {
                     stand = !stand
                     reached21Points = false
-                }, shape = RoundedCornerShape(50),
+                }, colors = buttonColors, shape = RoundedCornerShape(50),
                     enabled = !stand) {
                     Text(text = "Stand")
                 }
@@ -194,11 +203,10 @@ class GameActivity : ComponentActivity() {
                     playerHand.clear()
                     croupier.clear()
                 finish()
-                }, shape = RoundedCornerShape(50)) {
+                }, colors = buttonColors, shape = RoundedCornerShape(50)) {
                     Text("Exit")
                 }
                 Button(onClick = {
-
                     variableCards = allCards.toMutableList()
                     variableCards.shuffle()
                     playerHand.clear()
@@ -211,7 +219,7 @@ class GameActivity : ComponentActivity() {
                     reached21Points = false
                     stand = false
                     winner = false
-                }, shape = RoundedCornerShape(50)) {
+                }, colors = buttonColors, shape = RoundedCornerShape(50)) {
                     Text(text = "Reset")
                 }
             }
@@ -263,14 +271,22 @@ fun calculatePoints(listCards:MutableList<String>):Int{
 
 fun chooseWinner(croupier:Int, player:Int):String{
     val winner:String = if(player>21){
-        "Croupier"
-    }else{
-        if (croupier>21){
-            "Player"
-        } else{
-            if(croupier>player) "Croupier"
-            else "Player"
-        }
-    }
-    return "$winner has won!"
+                            "Croupier"
+                        }else{
+                            if (croupier>21){
+                                "Player"
+                            } else{
+                                if(croupier>player)  {
+                                    "Croupier"
+                                }
+                                else {
+                                    if (player>croupier){
+                                        "Player"
+                                    }
+                                    else "Draw"
+                                }
+                            }
+                        }
+
+    return winner
 }
