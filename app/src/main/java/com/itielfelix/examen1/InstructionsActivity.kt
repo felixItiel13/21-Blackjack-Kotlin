@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.itielfelix.examen1.ui.theme.Examen1Theme
 var instructionsHand = mutableListOf<String>()
 class InstructionsActivity : ComponentActivity() {
@@ -58,6 +58,7 @@ fun DefaultPreview() {
 }
 
 
+@OptIn(ExperimentalPagerApi::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun UIBuilding() {
