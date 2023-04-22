@@ -109,9 +109,6 @@ fun UIBuilding() {
         Text("")
         Text("Player points")
         Text(calculatePoints(listCards = instructionCards).toString())
-        HorizontalPager(count = 3, state = ) {
-
-        }
     }
         FloatingActionButton(
             modifier = Modifier
