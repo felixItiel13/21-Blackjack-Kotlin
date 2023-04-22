@@ -106,6 +106,7 @@ fun UIBuilding() {
         ) {
             Text("Stand")
         }
+        Text("TEST TEXT")
         Text("Croupier Points")
         Text("")
         Text("Player points")
