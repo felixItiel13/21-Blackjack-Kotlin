@@ -113,7 +113,7 @@ class HistoryActivity : ComponentActivity() {
                     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally){
                         Row(Modifier.fillMaxWidth()) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally){
-                                Text(text = "Croupier reached ${calculatePoints(listCards = returnSplittedArray(splittedRow[2]))} points with these cards.")
+                                Text(text = "Croupier reached ${calculatePoints(listCards = splitArray(splittedRow[2]))} points with these cards.")
                                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                                     RenderizeCards(cardString = splittedRow[2])
                                 }
@@ -122,7 +122,7 @@ class HistoryActivity : ComponentActivity() {
 
                         Row(Modifier.fillMaxWidth()) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally){
-                                Text(text = "Player reached ${calculatePoints(listCards = returnSplittedArray(splittedRow[1]))} points with these cards.")
+                                Text(text = "Player reached ${calculatePoints(listCards = splitArray(splittedRow[1]))} points with these cards.")
                                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                                     RenderizeCards(cardString = splittedRow[1])
                                 }
@@ -157,7 +157,7 @@ class HistoryActivity : ComponentActivity() {
         }
     }
 
-    fun returnSplittedArray(rowCards:String):MutableList<String>{
+    fun splitArray(rowCards:String):MutableList<String>{
         val allCards = rowCards.split(",")
         val cardsList = mutableListOf<String>()
         cardsList.addAll(allCards)
