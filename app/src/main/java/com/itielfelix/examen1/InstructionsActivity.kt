@@ -31,6 +31,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.itielfelix.examen1.ui.theme.Examen1Theme
+
 var instructionsHand = mutableListOf<String>()
 var croupierHand = mutableListOf<String>()
 class InstructionsActivity : ComponentActivity() {

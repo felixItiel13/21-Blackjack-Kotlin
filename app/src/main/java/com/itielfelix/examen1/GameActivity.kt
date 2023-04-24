@@ -13,6 +13,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Minimize
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -24,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.itielfelix.examen1.ui.theme.Examen1Theme
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,6 +38,7 @@ var allCards  = mutableListOf("h2","h3","h4","h5","h6","h7","h8","h9","h10","hj"
 var variableCards = allCards.toMutableList()
 var playerHand = mutableListOf<String>()
 var croupier = mutableListOf<String>()
+var limit = 21
 class GameActivity : ComponentActivity() {
 lateinit var history:DatabaseHelper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +63,7 @@ lateinit var history:DatabaseHelper
     @SuppressLint("DiscouragedApi")
     @Composable
     fun GameUI() {
+        var limitPoints by remember{mutableStateOf(limit)}
         val buttonColors = ButtonDefaults.buttonColors(backgroundColor = appColor)
         var winner by rememberSaveable{
             mutableStateOf(false)
@@ -77,12 +82,12 @@ lateinit var history:DatabaseHelper
         val croupierCards = remember { croupier.toMutableStateList() } //Croupier hand of cards
         var numCards by remember{ mutableStateOf( playerCards.size)} //Number of cards in playersHand
         var points by remember{ mutableStateOf(0) } //Points earned
-        var reached21Points by remember { mutableStateOf(false)} //True if 21 points has been reached
+        var reachedPoints by remember { mutableStateOf(false)} //True if 21 points has been reached
         var stand by remember { mutableStateOf(false)} //True if player dont want to draw cards
 
         //Determine if 21 points has been reached
         points = calculatePoints(playerCards)
-        reached21Points = !(points>21 || stand)
+        reachedPoints = !(points>limit || stand)
 
         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
             Row(Modifier.horizontalScroll(ScrollState(0)),horizontalArrangement = Arrangement.Center){
@@ -176,17 +181,26 @@ lateinit var history:DatabaseHelper
                     playerCards.add(variableCards.removeLast())
                     numCards = playerCards.size
                 }, colors = buttonColors,
-                    enabled = reached21Points, shape = RoundedCornerShape(50)
+                    enabled = reachedPoints, shape = RoundedCornerShape(50)
                 ) {
                     Text("Draw Card")
                 }
 
                 Button(onClick = {
                     stand = !stand
-                    reached21Points = false
+                    reachedPoints = false
                 }, colors = buttonColors, shape = RoundedCornerShape(50),
                     enabled = !stand) {
                     Text(text = "Stand")
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center){
+                    IconButton(onClick = { if(limit!=50) {limit+=1; limitPoints = limit}}, enabled = stand) {
+                        Icon(imageVector = Icons.Default.Remove, contentDescription = "add")
+                }
+                    Text("$limitPoints")
+                    IconButton(onClick = { if(limit!=0) {limit-=1; limitPoints = limit}}, enabled= stand) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = "add")
                 }
             }
             Text(points.toString())
@@ -213,7 +227,7 @@ lateinit var history:DatabaseHelper
                     playerCards.add(variableCards.removeLast())
                     croupierCards.add(variableCards.removeLast())
                     croupierCards.add(variableCards.removeLast())
-                    reached21Points = false
+                    reachedPoints = false
                     stand = false
                     winner = false
                 }, colors = buttonColors, shape = RoundedCornerShape(50)) {
@@ -261,16 +275,16 @@ fun calculatePoints(listCards:MutableList<String>):Int{
         }
     }
     listOfLetterCards.forEach{ _ ->
-        points += if((points+11) >21) { 1 } else 11
+        points += if((points+11) >limit) { 1 } else 11
     }
     return points
 }
 
 fun chooseWinner(croupier:Int, player:Int):String{
-    val winner:String = if(player>21){
+    val winner:String = if(player>limit){
                             "Croupier"
                         }else{
-                            if (croupier>21){
+                            if (croupier>limit){
                                 "Player"
                             } else{
                                 if(croupier>player)  {
