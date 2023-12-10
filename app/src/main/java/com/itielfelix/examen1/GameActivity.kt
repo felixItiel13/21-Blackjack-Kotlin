@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -15,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -60,7 +58,7 @@ lateinit var history:DatabaseHelper
     }
 
 
-    @SuppressLint("DiscouragedApi")
+    @SuppressLint("DiscouragedApi", "SimpleDateFormat")
     @Composable
     fun GameUI() {
         var limitPoints by remember{mutableStateOf(limit)}
@@ -126,7 +124,6 @@ lateinit var history:DatabaseHelper
                     if (stand) {
                         while (calculatePoints(croupierCards) < 17) {
                             croupierCards.add(variableCards.removeLast())
-                            Toast.makeText(thisContext, "CroupierCards: ${croupierCards.size}",Toast.LENGTH_SHORT).show()
                         }
                         //Showing all croupier cards
                         for (i in 2 until croupierCards.size)
@@ -164,7 +161,6 @@ lateinit var history:DatabaseHelper
                             for(item in croupierCards){
                                 savedCroupierCards+= "$item,"
                             }
-                            Toast.makeText(thisContext, current,Toast.LENGTH_SHORT).show()
                             history.addRow(savedPlayerCards, savedCroupierCards,
                                 chooseWinner(calculatePoints(listCards = croupierCards),points), current.toString())
                         }
@@ -172,7 +168,7 @@ lateinit var history:DatabaseHelper
                     }
                 }
             }
-            Text(calculatePoints(listCards = croupierCards).toString() +" "+ croupierCards.size.toString())
+            Text(calculatePoints(listCards = croupierCards).toString())
             Row(
                 Modifier
                     .fillMaxWidth()

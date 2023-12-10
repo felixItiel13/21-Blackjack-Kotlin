@@ -1,15 +1,12 @@
 package com.itielfelix.examen1
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
@@ -151,9 +148,8 @@ class HistoryActivity : ComponentActivity() {
         val cardsList = mutableListOf<String>()
         cardsList.addAll(allCardsList)
         cardsList.removeLast()
-        Toast.makeText(thisContext,cardsList.toString(), Toast.LENGTH_SHORT).show()
         for(item in cardsList){
-         com.itielfelix.examen1.GenerateCard(thisContext = thisContext, card = item, modifier = cardModifier)
+         GenerateCard(thisContext,item,cardModifier)
         }
     }
 
